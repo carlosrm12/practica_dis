@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Mis Tareas (Ambiente: <span id="env">Cargando...</span>)</h1>
+    <input type="text" id="taskInput" placeholder="Nueva tarea">
+    <button onclick="addTask()">Agregar</button>
+    <ul id="list"></ul>
+
+    <script>
+        // En un caso real, la URL sería dinámica. Aquí asumimos localhost relativo al server
+        const API_URL = "http://" + window.location.hostname + ":8000"; 
+        
+        async function loadTasks() {
+            const res = await fetch(`${API_URL}/tasks`);
+            const data = await res.json();
+            document.getElementById('list').innerHTML = data.tasks.map(t => `<li>${t}</li>`).join('');
+            document.getElementById('env').innerText = window.location.hostname;
+        }
+
+        async function addTask() {
+            const name = document.getElementById('taskInput').value;
+            await fetch(`${API_URL}/tasks`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({name})
+            });
+            loadTasks();
+        }
+        loadTasks();
+    </script>
+</body>
+</html>
