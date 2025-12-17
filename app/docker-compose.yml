@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      # Esta variable vendrá del sistema operativo (inyectada por Terraform)
+      DB_HOST: ${DB_HOST_ENV} 
+      DB_NAME: taskdb
+      DB_USER: postgres
+      DB_PASS: postgres
+    restart: always
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
