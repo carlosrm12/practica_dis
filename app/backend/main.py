@@ -2,8 +2,18 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import os
 import psycopg2
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# Permitir que el frontend (cualquier origen) consulte a la API
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # En producción real pondrías el dominio del ALB
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Configuración DB (variables de entorno)
 DB_HOST = os.getenv("DB_HOST", "db")
